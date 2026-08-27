@@ -1,0 +1,4 @@
+.codex-vite.*.log
+node_modules/
+output/
+tmp/

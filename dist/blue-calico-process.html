@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>蓝印花布制作流程</title>
+    <style>
+      :root {
+        --ink-blue: #133b69;
+        --deep-blue: #082340;
+        --cloth-blue: #1f5f9a;
+        --paper: #eee7d9;
+        --paper-line: rgba(87, 72, 50, 0.16);
+        --brown: #7a2b12;
+        --green-ink: #213c22;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-width: 320px;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        padding: 0;
+        overflow: hidden;
+        background: #1b1d1f;
+        font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+      }
+
+      .stage {
+        position: relative;
+        width: min(100vw - 48px, 2048px);
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 17% 24%, rgba(255, 255, 255, 0.52), transparent 18%),
+          radial-gradient(circle at 78% 72%, rgba(90, 72, 45, 0.08), transparent 25%),
+          linear-gradient(90deg, rgba(70, 54, 36, 0.08) 1px, transparent 1px) 0 0 / 46px 46px,
+          linear-gradient(0deg, rgba(70, 54, 36, 0.07) 1px, transparent 1px) 0 0 / 46px 46px,
+          var(--paper);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+        isolation: isolate;
+      }
+
+      .stage::before,
+      .stage::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .stage::before {
+        opacity: 0.42;
+        background:
+          repeating-radial-gradient(circle at 12% 18%, rgba(81, 70, 49, 0.16) 0 1px, transparent 1px 7px),
+          repeating-linear-gradient(99deg, transparent 0 22px, rgba(77, 61, 42, 0.08) 23px 24px, transparent 25px 52px);
+        mix-blend-mode: multiply;
+      }
+
+      .stage::after {
+        z-index: 20;
+        background:
+          radial-gradient(circle 210px at var(--spot-x, 50%) var(--spot-y, 50%), transparent 0 70%, rgba(7, 16, 26, 0.035) 82%, rgba(7, 16, 26, 0.12) 100%),
+          radial-gradient(circle 520px at var(--spot-x, 50%) var(--spot-y, 50%), rgba(255, 244, 200, 0.24), transparent 62%);
+        mix-blend-mode: multiply;
+      }
+
+      .poster {
+        position: absolute;
+        inset: 6.5% 3.8%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: 6.2% 4.6%;
+      }
+
+      .step {
+        position: relative;
+        display: grid;
+        grid-template-columns: 52% 48%;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .step:nth-child(n + 4) {
+        grid-template-columns: 52% 48%;
+      }
+
+      .splash {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1.24 / 1;
+        filter: drop-shadow(0 16px 18px rgba(53, 37, 22, 0.2));
+      }
+
+      .splash svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .splash .scene {
+        width: 100%;
+        height: 100%;
+        clip-path: polygon(48% 0%, 56% 15%, 68% 7%, 70% 23%, 89% 18%, 82% 35%, 100% 47%, 82% 56%, 92% 76%, 72% 72%, 66% 100%, 53% 80%, 40% 97%, 35% 78%, 13% 83%, 23% 63%, 0% 55%, 18% 42%, 8% 26%, 28% 25%, 31% 6%);
+        background:
+          linear-gradient(140deg, rgba(255, 255, 255, 0.34), transparent 42%),
+          var(--cloth-blue);
+      }
+
+      .scene-inner {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .scene.sky {
+        background:
+          linear-gradient(180deg, #dfeeff 0 32%, #e8dfc8 32% 38%, #1e6b44 39% 100%);
+      }
+
+      .scene.table {
+        background:
+          linear-gradient(180deg, #d6c6a7 0 22%, #9c7044 22% 100%);
+      }
+
+      .scene.dye {
+        background:
+          radial-gradient(circle at 78% 20%, rgba(255, 242, 173, 0.35), transparent 20%),
+          linear-gradient(180deg, #d6cfb9 0 28%, #d2bb8e 28% 100%);
+      }
+
+      .scene.wash {
+        background:
+          linear-gradient(180deg, #cbe4f0 0 28%, #75b9d9 29% 100%);
+      }
+
+      .scene.sun {
+        background:
+          linear-gradient(180deg, #edf2dc 0 34%, #d6be79 34% 100%);
+      }
+
+      .mountain,
+      .rack,
+      .vat,
+      .water,
+      .cloth,
+      .pattern-dot,
+      .tool,
+      .steam,
+      .sun-disc,
+      .frame-line,
+      .hand,
+      .person,
+      .hat {
+        position: absolute;
+      }
+
+      .mountain {
+        left: -10%;
+        bottom: 28%;
+        width: 120%;
+        height: 32%;
+        background:
+          linear-gradient(135deg, transparent 0 28%, rgba(255, 255, 255, 0.72) 29% 34%, transparent 35%),
+          linear-gradient(150deg, #7fa367 0 48%, transparent 49%);
+        clip-path: polygon(0 100%, 18% 34%, 34% 82%, 52% 20%, 73% 92%, 100% 48%, 100% 100%);
+      }
+
+      .cloth {
+        left: 9%;
+        right: 9%;
+        bottom: 19%;
+        height: 30%;
+        border-radius: 6px;
+        background:
+          radial-gradient(circle, rgba(246, 246, 232, 0.9) 0 8%, transparent 9%) 0 0 / 48px 48px,
+          radial-gradient(circle, rgba(246, 246, 232, 0.65) 0 5%, transparent 6%) 24px 24px / 48px 48px,
+          var(--cloth-blue);
+        transform: rotate(-3deg);
+      }
+
+      .cloth.large {
+        left: 2%;
+        right: 4%;
+        bottom: 28%;
+        height: 36%;
+        transform: rotate(1deg);
+      }
+
+      .rack {
+        left: 10%;
+        right: 10%;
+        bottom: 18%;
+        height: 8px;
+        border-radius: 999px;
+        background: #8b5b2e;
+        box-shadow: 0 44px 0 #8b5b2e, 0 88px 0 #8b5b2e;
+      }
+
+      .frame-line {
+        width: 6px;
+        height: 72%;
+        bottom: 11%;
+        border-radius: 999px;
+        background: #7a5128;
+      }
+
+      .frame-line.left {
+        left: 17%;
+      }
+
+      .frame-line.right {
+        right: 17%;
+      }
+
+      .vat {
+        left: 18%;
+        bottom: 16%;
+        width: 64%;
+        height: 42%;
+        border-radius: 10% 10% 42% 42%;
+        background:
+          radial-gradient(ellipse at 50% 8%, #0d4c80 0 48%, transparent 49%),
+          linear-gradient(180deg, #6d3f21 0 18%, #2d1a12 19% 100%);
+      }
+
+      .water {
+        left: 20%;
+        right: 20%;
+        bottom: 31%;
+        height: 20%;
+        border-radius: 50%;
+        background:
+          radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.38), transparent 64%),
+          #114a7e;
+      }
+
+      .tool {
+        width: 56%;
+        height: 8px;
+        border-radius: 999px;
+        background: #784826;
+        transform-origin: left center;
+      }
+
+      .tool.brush {
+        left: 27%;
+        bottom: 53%;
+        transform: rotate(28deg);
+      }
+
+      .tool.scraper {
+        left: 22%;
+        bottom: 62%;
+        transform: rotate(-13deg);
+      }
+
+      .tool.knife {
+        left: 31%;
+        bottom: 46%;
+        transform: rotate(-31deg);
+      }
+
+      .steam {
+        width: 16px;
+        height: 88px;
+        border-left: 5px solid rgba(255, 255, 255, 0.75);
+        border-radius: 50%;
+        opacity: 0.8;
+      }
+
+      .steam.one {
+        left: 34%;
+        top: 15%;
+        transform: rotate(18deg);
+      }
+
+      .steam.two {
+        left: 51%;
+        top: 12%;
+        transform: rotate(-14deg);
+      }
+
+      .steam.three {
+        left: 66%;
+        top: 17%;
+        transform: rotate(12deg);
+      }
+
+      .person {
+        left: 58%;
+        bottom: 31%;
+        width: 22%;
+        height: 36%;
+        border-radius: 48% 48% 18% 18%;
+        background: #6d6a61;
+        transform: rotate(4deg);
+      }
+
+      .person::before {
+        content: "";
+        position: absolute;
+        left: 30%;
+        top: -23%;
+        width: 36%;
+        height: 28%;
+        border-radius: 50%;
+        background: #b56a38;
+      }
+
+      .hat {
+        left: 52%;
+        bottom: 67%;
+        width: 34%;
+        height: 18%;
+        background: #caa36a;
+        clip-path: polygon(50% 0, 100% 70%, 0 70%);
+        transform: rotate(4deg);
+      }
+
+      .hand {
+        width: 28%;
+        height: 8px;
+        border-radius: 999px;
+        background: #b56a38;
+      }
+
+      .hand.left {
+        left: 49%;
+        bottom: 48%;
+        transform: rotate(31deg);
+      }
+
+      .hand.right {
+        left: 67%;
+        bottom: 49%;
+        transform: rotate(-24deg);
+      }
+
+      .sun-disc {
+        right: 12%;
+        top: 10%;
+        width: 22%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: rgba(240, 126, 45, 0.52);
+      }
+
+      .water-line {
+        position: absolute;
+        left: -5%;
+        bottom: 38%;
+        width: 115%;
+        height: 10%;
+        border-top: 5px solid rgba(255, 255, 255, 0.45);
+        border-radius: 50%;
+      }
+
+      .copy {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        justify-items: start;
+        align-content: center;
+        min-width: 0;
+        padding-left: 5%;
+      }
+
+      .step-num {
+        margin: 0 0 1.2%;
+        color: var(--brown);
+        font-family: "STKaiti", "KaiTi", "Noto Serif CJK SC", serif;
+        font-size: clamp(20px, 2.55vw, 52px);
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .step-title {
+        margin: 0 0 6.4%;
+        color: var(--green-ink);
+        font-family: "STKaiti", "KaiTi", "Noto Serif CJK SC", serif;
+        font-size: clamp(30px, 4.4vw, 88px);
+        font-weight: 900;
+        line-height: 0.98;
+      }
+
+      .note {
+        width: min(100%, 232px);
+        min-height: 94px;
+        border: 1.5px solid rgba(146, 71, 38, 0.56);
+        padding: 13px 15px;
+        color: #455136;
+        background: rgba(239, 231, 211, 0.44);
+        font-family: "STKaiti", "KaiTi", "Noto Serif CJK SC", serif;
+        font-size: clamp(11px, 0.74vw, 15px);
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .watermark-title {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 0;
+        color: rgba(19, 59, 105, 0.055);
+        font-family: "STKaiti", "KaiTi", serif;
+        font-size: clamp(112px, 16vw, 310px);
+        font-weight: 900;
+        white-space: nowrap;
+        transform: translate(-50%, -50%) rotate(-7deg);
+      }
+
+      .hint {
+        position: fixed;
+        left: 24px;
+        bottom: 18px;
+        display: none;
+        color: rgba(238, 231, 217, 0.76);
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        body {
+          align-items: start;
+          overflow: auto;
+          padding: 12px;
+        }
+
+        .stage {
+          width: 1300px;
+        }
+
+        .hint {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage" id="stage" aria-label="蓝印花布制作流程图">
+      <div class="watermark-title">蓝印花布</div>
+      <section class="poster">
+        <article class="step">
+          <div class="splash" aria-hidden="true">
+            <div class="scene sky">
+              <div class="mountain"></div>
+              <div class="cloth large"></div>
+              <div class="person"></div>
+              <div class="hat"></div>
+              <div class="hand left"></div>
+              <div class="hand right"></div>
+            </div>
+          </div>
+          <div class="copy">
+            <p class="step-num">第一步</p>
+            <h2 class="step-title">画稿</h2>
+            <div class="note">先定纹样题材与寓意，将莲、蝶、寿字、回纹等民间图案画成线稿，为后续刻版留下清晰轮廓。</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="splash" aria-hidden="true">
+            <div class="scene table">
+              <div class="cloth"></div>
+              <div class="tool knife"></div>
+              <div class="person"></div>
+              <div class="hat"></div>
+              <div class="hand left"></div>
+              <div class="hand right"></div>
+            </div>
+          </div>
+          <div class="copy">
+            <p class="step-num">第二步</p>
+            <h2 class="step-title">刻版</h2>
+            <div class="note">把画稿覆在油纸或牛皮纸版上，沿纹样镂刻成花版。刀口要稳，细处不断，大片不塌。</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="splash" aria-hidden="true">
+            <div class="scene table">
+              <div class="rack"></div>
+              <div class="cloth large"></div>
+              <div class="tool scraper"></div>
+              <div class="person"></div>
+              <div class="hat"></div>
+              <div class="hand left"></div>
+              <div class="hand right"></div>
+            </div>
+          </div>
+          <div class="copy">
+            <p class="step-num">第三步</p>
+            <h2 class="step-title">刮浆</h2>
+            <div class="note">用黄豆粉、石灰等调成防染浆，透过花版刮到白布上，遮住将来要保留白花的部分。</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="splash" aria-hidden="true">
+            <div class="scene dye">
+              <div class="vat"></div>
+              <div class="water"></div>
+              <div class="steam one"></div>
+              <div class="steam two"></div>
+              <div class="steam three"></div>
+              <div class="person"></div>
+              <div class="hat"></div>
+              <div class="hand left"></div>
+              <div class="hand right"></div>
+            </div>
+          </div>
+          <div class="copy">
+            <p class="step-num">第四步</p>
+            <h2 class="step-title">入靛</h2>
+            <div class="note">布料浸入植物靛蓝染缸，多次浸染、提起、氧化。蓝色由浅转深，底色逐渐沉稳。</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="splash" aria-hidden="true">
+            <div class="scene wash">
+              <div class="water-line"></div>
+              <div class="cloth large"></div>
+              <div class="tool brush"></div>
+              <div class="person"></div>
+              <div class="hat"></div>
+              <div class="hand left"></div>
+              <div class="hand right"></div>
+            </div>
+          </div>
+          <div class="copy">
+            <p class="step-num">第五步</p>
+            <h2 class="step-title">刮灰</h2>
+            <div class="note">染色稳定后刮去防染浆，再以清水反复漂洗，浮色和残浆退去，蓝底白花显露出来。</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="splash" aria-hidden="true">
+            <div class="scene sun">
+              <div class="sun-disc"></div>
+              <div class="frame-line left"></div>
+              <div class="frame-line right"></div>
+              <div class="rack"></div>
+              <div class="cloth large"></div>
+              <div class="person"></div>
+              <div class="hat"></div>
+            </div>
+          </div>
+          <div class="copy">
+            <p class="step-num">第六步</p>
+            <h2 class="step-title">晾晒</h2>
+            <div class="note">把洗净的花布展开晾晒，让日光和风收干水汽。靛蓝定格，纹样成为可用的日常之美。</div>
+          </div>
+        </article>
+      </section>
+    </main>
+    <div class="hint">移动鼠标查看探照灯效果</div>
+    <script>
+      const stage = document.querySelector("#stage");
+
+      function moveSpot(event) {
+        const rect = stage.getBoundingClientRect();
+        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+        const x = ((clientX - rect.left) / rect.width) * 100;
+        const y = ((clientY - rect.top) / rect.height) * 100;
+        stage.style.setProperty("--spot-x", `${Math.max(0, Math.min(100, x))}%`);
+        stage.style.setProperty("--spot-y", `${Math.max(0, Math.min(100, y))}%`);
+      }
+
+      window.addEventListener("pointermove", moveSpot);
+      window.addEventListener("touchmove", moveSpot, { passive: true });
+    </script>
+  </body>
+</html>

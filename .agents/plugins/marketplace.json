@@ -1,0 +1,32 @@
+{
+  "name": "blue-calico-product-design",
+  "interface": {
+    "displayName": "Blue Calico Product Design"
+  },
+  "plugins": [
+    {
+      "name": "figma",
+      "source": {
+        "source": "local",
+        "path": "./plugins/figma"
+      },
+      "policy": {
+        "installation": "INSTALLED_BY_DEFAULT",
+        "authentication": "ON_USE"
+      },
+      "category": "Creativity"
+    },
+    {
+      "name": "build-web-apps",
+      "source": {
+        "source": "local",
+        "path": "./plugins/build-web-apps"
+      },
+      "policy": {
+        "installation": "INSTALLED_BY_DEFAULT",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
