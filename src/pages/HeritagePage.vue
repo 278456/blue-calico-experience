@@ -1,162 +1,157 @@
 <script setup>
-import { ArrowRight, BookOpen, Camera, HandHeart, Layers3, MapPin, Route, Sparkles, UsersRound } from 'lucide-vue-next'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { ArrowRight, Expand, Film, Images, MapPin, Sparkles, X } from 'lucide-vue-next'
 import { craftSteps } from '../data'
 
 const emit = defineEmits(['navigate'])
+const selectedImage = ref(null)
 
-const heroImage = '/assets/heritage/dalin-workshop.png'
-const storyImages = [
-  { src: '/assets/heritage/artisan-at-work.jpeg', alt: '传承人在花版上进行刮浆工序', caption: '手上的工艺：刮浆与花版' },
-  { src: '/assets/heritage/artisan-portrait.png', alt: '蓝印花布传承人与工坊布样', caption: '工坊里的传承人和布样' },
-  { src: '/assets/heritage/dalin-workshop.png', alt: '大临村蓝印花布工坊外景', caption: '大临村工坊与晾晒布样' },
-  { src: '/assets/heritage/archive-pattern-table.png', alt: '桌面上的蓝印花布样品', caption: '一桌蓝白：纹样与日用布品' },
-  { src: '/assets/heritage/archive-table-runner.png', alt: '蓝印花布桌旗', caption: '传统纹样进入当代日用' },
-  { src: '/assets/heritage/archive-craft-store.png', alt: '游客挑选蓝印花布文创', caption: '在工坊挑选一片属于自己的蓝' },
-  { src: '/assets/heritage/archive-visitor-demo.png', alt: '游客观看蓝印花布体验演示', caption: '围在工作台前看见手艺' },
-  { src: '/assets/heritage/archive-cultural-products.png', alt: '蓝印花布文创产品与花版', caption: '从花版到可带走的日常物件' },
-  { src: '/assets/heritage/archive-tote-bag.png', alt: '蓝印花布帆布袋', caption: '把蓝白纹样带进生活' },
-  { src: '/assets/heritage/archive-apparel.png', alt: '蓝印花布服装与围裙', caption: '蓝印花布的新衣与新用法' },
-  { src: '/assets/heritage/archive-drying.png', alt: '晾晒中的蓝印花布', caption: '阳光下定格的靛蓝与素白' },
-  { src: '/assets/heritage/archive-family-workshop.png', alt: '儿童参与蓝印花布体验', caption: '亲子体验：让手艺被下一代看见' },
-  { src: '/assets/heritage/archive-drying-tour.png', alt: '游客参观蓝印花布晾晒场景', caption: '走进布样之间，听见村庄的故事' },
+const workshopImages = [
+  { src: '/assets/fieldwork/studio-textiles.webp', alt: '工坊墙面悬挂的蓝印花布布样', caption: '布样陈列', note: '工坊现场 · 2026' },
+  { src: '/assets/fieldwork/carving-detail.webp', alt: '手工刻制蓝印花布花版的细节', caption: '花版刻制', note: '手艺细节 · 2026' },
+  { src: '/assets/fieldwork/artisan-guide.webp', alt: '传承人向来访者讲解蓝印花布花版', caption: '现场讲解', note: '人与手艺 · 2026' },
+  { src: '/assets/fieldwork/studio-products.webp', alt: '工坊中的蓝印花布文创与制作工具', caption: '工具与产品', note: '工作台 · 2026' },
+  { src: '/assets/fieldwork/workshop-room.webp', alt: '大临村蓝印花布工坊室内空间', caption: '工坊空间', note: '大临村 · 2026' },
 ]
 
-const visitorFocus = [
-  { value: '01', label: '先看人', text: '从传承人的手、工具和故事进入蓝印花布。' },
-  { value: '02', label: '再看工艺', text: '理解刻版、防染、入靛、刮白这些关键步骤。' },
-  { value: '03', label: '最后看纹样', text: '把花草、瑞兽、吉祥符号和江南生活联系起来。' },
+const outreachStories = [
+  { src: '/assets/fieldwork/exhibition-haining.webp', kicker: '展览', title: '守艺 · 大临蓝印花布非遗展', text: '从村庄工坊走入公共文化空间，让布样、花版和生活器物共同讲述手艺。' },
+  { src: '/assets/fieldwork/exhibition-yiwu.webp', kicker: '博览会', title: '义乌文化和旅游产品交易博览会', text: '以文创产品和现场展示连接更广泛的观众，让传统纹样进入当代消费场景。' },
+  { src: '/assets/fieldwork/runway.webp', kicker: '走秀', title: '黄湾文化旅游节非遗蓝印花走秀', text: '蓝印花布从平面布样变成可穿着的当代设计，在行走中呈现新的尺度。' },
+  { src: '/assets/fieldwork/school-class.webp', kicker: '非遗进学校', title: '黄湾小学兴趣课堂', text: '通过彩色拷花布体验，让孩子从动手开始认识纹样、色彩与地方文化。' },
+  { src: '/assets/fieldwork/enterprise-class.webp', kicker: '非遗进企业', title: '小候鸟公益课堂', text: '把非遗体验带进企业暑期课堂，让更多家庭在共同制作中接触传统工艺。' },
+  { src: '/assets/fieldwork/scenic-class.webp', kicker: '非遗进景区', title: '南关厢蓝印花布体验', text: '在景区设置开放式体验，让游客把一次观看转化为亲手参与的记忆。' },
 ]
 
-const storyBlocks = [
-  {
-    icon: HandHeart,
-    title: '匠人 / 传承故事',
-    text: '大临村的蓝印花布先存在于人的手上。老一辈把纹样、浆料比例、入靛火候和晾晒经验留在日复一日的制作里，年轻人则用展览、文创和数字方式让它继续被看见。',
-  },
-  {
-    icon: Layers3,
-    title: '制作过程',
-    text: '一块布从画稿到成品，需要经过刻版、刮浆、染色、刮白、清洗、晾晒。每一步都不只是技术，也是一种和时间相处的方式。',
-  },
-  {
-    icon: Camera,
-    title: '相关图片资料',
-    text: '图片资料记录布样、工具、纹样细节和村落现场。游客可以通过这些图像，把展柜里的蓝白纹样重新放回真实生活。',
-  },
-  {
-    icon: BookOpen,
-    title: '文化价值',
-    text: '蓝印花布连接江南日用审美、礼俗祝福、女性手工经验和地方记忆。它既是一匹布，也是一座村庄可以向外讲述的文化名片。',
-  },
+const creativeImages = [
+  { src: '/assets/fieldwork/creative-products.webp', alt: '蓝印花布包袋、扇子等文创产品', caption: '包袋、扇面与日用器物' },
+  { src: '/assets/fieldwork/creative-fashion.webp', alt: '蓝印花布服饰与包袋展示', caption: '传统纹样进入当代穿搭' },
 ]
 
-const visitPath = [
-  { icon: MapPin, title: '来到大临村', text: '先认识蓝印花布与村落之间的关系，知道这门手艺为什么在这里生长。' },
-  { icon: UsersRound, title: '听见传承人', text: '从口述故事里理解手艺人的坚持、家庭记忆和代际传承。' },
-  { icon: Route, title: '走完工艺线', text: '按制作顺序观看工序，把“蓝”和“白”如何出现看明白。' },
-  { icon: Sparkles, title: '带走一片蓝', text: '在纹样库、互动卡片或文创体验中，选择一个属于自己的蓝印记忆。' },
-]
+function openImage(image) {
+  selectedImage.value = image
+  document.documentElement.classList.add('media-lightbox-open')
+}
+
+function closeImage() {
+  selectedImage.value = null
+  document.documentElement.classList.remove('media-lightbox-open')
+}
+
+function handleKeydown(event) {
+  if (event.key === 'Escape') closeImage()
+}
+
+onMounted(() => window.addEventListener('keydown', handleKeydown))
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
+  document.documentElement.classList.remove('media-lightbox-open')
+})
 </script>
 
 <template>
-  <section class="heritage-page section top-section">
-    <div class="heritage-hero heritage-visitor-hero">
-      <div class="page-heading heritage-visitor-copy">
-        <p class="eyebrow">People Story Of Dalin Blue Calico</p>
+  <section class="field-page">
+    <section class="field-hero">
+      <img src="/assets/fieldwork/workshop-aerial.webp" alt="大临村蓝印花布工坊航拍" />
+      <div class="field-hero-shade"></div>
+      <div class="field-hero-copy">
+        <p class="eyebrow">FIELD ARCHIVE · DALIN VILLAGE</p>
         <h1>她与蓝</h1>
-        <p>给来到大临村的游客看的传承故事：看见做布的人，理解靛蓝的工艺，也把一段江南记忆带回去。</p>
-        <div class="heritage-hero-actions">
-          <button class="primary-button" type="button" @click="emit('navigate', '/library')">
-            去看纹样
-            <ArrowRight :size="18" />
-          </button>
-          <button class="secondary-button" type="button" @click="emit('navigate', '/find-blue')">
-            寻找你的蓝
-          </button>
+        <p>从工坊的一匹布，到校园、景区与展览现场。真实影像记录大临蓝印花布如何被制作、被观看，也被继续使用。</p>
+        <div class="field-hero-actions">
+          <button class="primary-button" type="button" @click="emit('navigate', '/library')">浏览纹样档案 <ArrowRight :size="18" /></button>
+          <a class="field-anchor-link" href="#field-film">观看工坊影像</a>
         </div>
       </div>
-      <div class="heritage-hero-image heritage-visitor-image">
-        <img :src="heroImage" alt="大临村蓝印花布现场资料" />
-        <span>大临村蓝印花布 · 人物与工艺故事</span>
-      </div>
-    </div>
-
-    <div class="heritage-visitor-focus">
-      <article v-for="item in visitorFocus" :key="item.value">
-        <strong>{{ item.value }}</strong>
-        <span>{{ item.label }}</span>
-        <p>{{ item.text }}</p>
-      </article>
-    </div>
-
-    <section class="heritage-section">
-      <div class="section-title-row">
-        <div>
-          <p class="eyebrow">For Visitors</p>
-          <h2>这页想带游客看什么</h2>
-        </div>
-      </div>
-      <div class="heritage-story-grid">
-        <article v-for="block in storyBlocks" :key="block.title">
-          <component :is="block.icon" :size="24" />
-          <h2>{{ block.title }}</h2>
-          <p>{{ block.text }}</p>
-        </article>
+      <div class="field-hero-index" aria-label="页面内容索引">
+        <span><b>01</b> 工坊现场</span>
+        <span><b>02</b> 传播足迹</span>
+        <span><b>03</b> 文创转译</span>
       </div>
     </section>
 
-    <section class="heritage-section heritage-visit-section">
-      <div class="section-title-row">
-        <div>
-          <p class="eyebrow">Village Visit Path</p>
-          <h2>游客在村里的一条观看路径</h2>
-        </div>
+    <section id="field-film" class="field-band field-film-section">
+      <div class="field-section-heading">
+        <div><p class="eyebrow">Workshop Film</p><h2>十秒，走进一间仍在工作的工坊</h2></div>
+        <Film :size="30" aria-hidden="true" />
       </div>
-      <div class="heritage-visit-path">
-        <article v-for="(item, index) in visitPath" :key="item.title">
-          <span>{{ String(index + 1).padStart(2, '0') }}</span>
-          <component :is="item.icon" :size="24" />
-          <strong>{{ item.title }}</strong>
-          <p>{{ item.text }}</p>
-        </article>
+      <div class="field-film-layout">
+        <video controls playsinline preload="metadata" poster="/assets/fieldwork/workshop-room.webp">
+          <source src="/assets/fieldwork/workshop-film.webm" type="video/webm" />
+          <source src="/assets/fieldwork/workshop-film.mp4" type="video/mp4" />
+        </video>
+        <div class="field-film-copy">
+          <span>现场记录 · 2026.08</span>
+          <p>镜头从工坊的布样、花版和工作台之间经过。它不是一段摆拍式宣传片，而是对真实制作空间的短暂凝视。</p>
+          <dl>
+            <div><dt>地点</dt><dd>浙江嘉兴 · 大临村</dd></div>
+            <div><dt>内容</dt><dd>布样陈列、工具与制作现场</dd></div>
+            <div><dt>形式</dt><dd>720p 现场影像</dd></div>
+          </dl>
+        </div>
       </div>
     </section>
 
-    <section class="heritage-section">
-      <div class="section-title-row">
-        <div>
-          <p class="eyebrow">Craft Process</p>
-          <h2>一块布经过的路</h2>
-        </div>
+    <section class="field-band field-workshop-section">
+      <div class="field-section-heading">
+        <div><p class="eyebrow">Inside The Workshop</p><h2>手、花版与一屋子的蓝</h2></div>
+        <Images :size="30" aria-hidden="true" />
       </div>
-      <div class="heritage-process">
-        <article v-for="(step, index) in craftSteps" :key="step.title">
-          <span>{{ String(index + 1).padStart(2, '0') }}</span>
-          <strong>{{ step.title }}</strong>
-          <p>{{ step.text }}</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="heritage-section">
-      <div class="section-title-row">
-        <div>
-          <p class="eyebrow">Image Archive</p>
-          <h2>相关图片资料</h2>
-        </div>
-      </div>
-      <div class="heritage-gallery">
-        <figure v-for="image in storyImages" :key="image.src">
+      <div class="field-workshop-grid">
+        <button v-for="(image, index) in workshopImages" :key="image.src" type="button" :class="`field-workshop-item field-workshop-item-${index + 1}`" @click="openImage(image)">
           <img :src="image.src" :alt="image.alt" loading="lazy" decoding="async" />
-          <figcaption>{{ image.caption }}</figcaption>
-        </figure>
+          <span><small>{{ image.note }}</small><strong>{{ image.caption }}</strong></span>
+          <Expand :size="18" aria-hidden="true" />
+        </button>
       </div>
     </section>
 
-    <section class="heritage-value">
-      <p class="eyebrow">Cultural Value</p>
-      <h2>让游客带走的不只是照片</h2>
-      <p>大临村蓝印花布的价值，不只在“好看”，也在它把地方、家庭、祝福和手艺连接起来。游客看完这一页，应该能记住：蓝印花布是一种生活里的美，也是一代代人共同守住的村庄记忆。</p>
+    <section class="field-band field-outreach-section">
+      <div class="field-section-heading">
+        <div><p class="eyebrow">Living Heritage In Public</p><h2>一门手艺，走向六种现场</h2></div>
+        <MapPin :size="30" aria-hidden="true" />
+      </div>
+      <div class="field-outreach-list">
+        <article v-for="(story, index) in outreachStories" :key="story.title">
+          <button type="button" @click="openImage({ ...story, alt: story.title, caption: story.title })">
+            <img :src="story.src" :alt="story.title" loading="lazy" decoding="async" />
+            <Expand :size="18" aria-hidden="true" />
+          </button>
+          <div class="field-outreach-index">{{ String(index + 1).padStart(2, '0') }}</div>
+          <div class="field-outreach-copy"><span>{{ story.kicker }}</span><h3>{{ story.title }}</h3><p>{{ story.text }}</p></div>
+        </article>
+      </div>
     </section>
+
+    <section class="field-band field-creative-section">
+      <div class="field-creative-copy">
+        <p class="eyebrow">Contemporary Objects</p>
+        <h2>纹样不只留在展板上</h2>
+        <p>从包袋、扇面到服饰，蓝印花布在新的材料与使用场景中继续生长。传统不是被封存，而是被重新穿戴、携带和使用。</p>
+        <button class="secondary-button" type="button" @click="emit('navigate', '/patternx')">进入纹脉工坊 <Sparkles :size="18" /></button>
+      </div>
+      <button v-for="image in creativeImages" :key="image.src" class="field-creative-image" type="button" @click="openImage(image)">
+        <img :src="image.src" :alt="image.alt" loading="lazy" decoding="async" /><span>{{ image.caption }}</span>
+      </button>
+    </section>
+
+    <section class="field-band field-process-section">
+      <div class="field-section-heading"><div><p class="eyebrow">Craft Process</p><h2>从刻版到晾晒</h2></div></div>
+      <ol class="field-process-line">
+        <li v-for="(step, index) in craftSteps" :key="step.title"><span>{{ String(index + 1).padStart(2, '0') }}</span><strong>{{ step.title }}</strong><p>{{ step.short }}</p></li>
+      </ol>
+    </section>
+
+    <section class="field-closing">
+      <p class="eyebrow">KEEP THE BLUE MOVING</p><h2>看见现场，再去读懂一枚纹样</h2>
+      <button class="primary-button" type="button" @click="emit('navigate', '/library')">进入蓝印纹库 <ArrowRight :size="18" /></button>
+    </section>
+
+    <Transition name="media-lightbox">
+      <div v-if="selectedImage" class="field-lightbox" role="dialog" aria-modal="true" :aria-label="selectedImage.caption" @click.self="closeImage">
+        <button type="button" aria-label="关闭大图" @click="closeImage"><X :size="24" /></button>
+        <figure><img :src="selectedImage.src" :alt="selectedImage.alt || selectedImage.caption" /><figcaption>{{ selectedImage.caption }}</figcaption></figure>
+      </div>
+    </Transition>
   </section>
 </template>

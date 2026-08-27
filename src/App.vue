@@ -64,7 +64,7 @@ function createWithPattern(pattern) {
           @open-pattern="openPattern"
           @create-pattern="createWithPattern"
         />
-        <HeritagePage v-else-if="routeName === 'heritage'" />
+        <HeritagePage v-else-if="routeName === 'heritage'" @navigate="navigate" />
         <FindBluePage v-else-if="routeName === 'find-menu'" @navigate="navigate" />
         <FindBlueCardPage v-else-if="routeName === 'find-card'" @navigate="navigate" />
         <FindBlueGamePage v-else-if="routeName === 'find-game'" @navigate="navigate" />

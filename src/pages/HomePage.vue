@@ -160,8 +160,9 @@ onBeforeUnmount(() => {
 
     <div class="home-stage" :style="{ transform: `translateY(-${activeIndex * 100}vh)` }">
       <section class="home-panel hero-panel">
-        <video class="hero-video" autoplay muted loop playsinline poster="/assets/heritage/dalin-workshop.png" aria-hidden="true">
-          <source src="/assets/home/dalin-workshop-ambience.mp4" type="video/mp4" />
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="/assets/fieldwork/workshop-aerial.webp" aria-hidden="true">
+          <source src="/assets/fieldwork/workshop-film.webm" type="video/webm" />
+          <source src="/assets/fieldwork/workshop-film.mp4" type="video/mp4" />
         </video>
         <div class="hero-pattern pattern-floral"></div>
         <div class="hero-content">
