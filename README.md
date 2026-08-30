@@ -28,20 +28,26 @@
 
 ## 页面预览
 
+### 浏览与探索
+
 | 蓝印纹库 | 纹样详情 |
 | --- | --- |
 | ![蓝印纹库](screenshots/02-library.png) | ![牡丹纹样详情](screenshots/03-pattern-detail-mudan.png) |
 
-| 非遗现场 | 纹脉工坊 |
+### 文化与互动
+
+| 她与蓝 | 寻找你的蓝 |
 | --- | --- |
-| ![她与蓝](screenshots/04-heritage.png) | ![3D 纹脉工坊](screenshots/14-patternx-studio-redesign-desktop.png) |
+| ![她与蓝](screenshots/04-heritage.png) | ![寻找你的蓝](screenshots/16-find-blue.png) |
+
+### 3D 纹脉工坊
+
+![3D 纹脉工坊桌面端](screenshots/20-patternx-ceramic-vase-desktop.png)
 
 <details>
-<summary>查看移动端效果</summary>
+<summary>查看 3D 工坊移动端效果</summary>
 
-| 工坊入口 | 3D 创作 |
-| --- | --- |
-| ![移动端工坊入口](screenshots/07-intro-digital-design-mobile.png) | ![移动端 3D 创作](screenshots/15-patternx-studio-redesign-mobile.png) |
+![3D 纹脉工坊移动端](screenshots/21-patternx-ceramic-vase-mobile.png)
 
 </details>
 
